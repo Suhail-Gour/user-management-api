@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management API</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="nav-icon">⚡</span>
+      <span class="nav-title">UserAPI</span>
+    </div>
+    <div class="nav-status" id="loginStatus">
+      <span class="status-dot offline"></span>
+      <span class="status-text">Not logged in</span>
+    </div>
+  </nav>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-label">OPERATIONS</div>
+      <button class="sidebar-btn active" onclick="showTab('signup', this)">
+        <span class="sidebar-icon">👤</span> Sign Up
+      </button>
+      <button class="sidebar-btn" onclick="showTab('login', this)">
+        <span class="sidebar-icon">🔑</span> Login
+      </button>
+      <button class="sidebar-btn" onclick="showTab('role', this)">
+        <span class="sidebar-icon">🛡️</span> Assign Role
+      </button>
+      <button class="sidebar-btn" onclick="showTab('status', this)">
+        <span class="sidebar-icon">⚙️</span> Toggle Status
+      </button>
+
+      <div class="sidebar-label" style="margin-top: 24px;">QUICK INFO</div>
+      <div class="sidebar-info">
+        <div class="info-row">
+          <span class="info-key">API</span>
+          <span class="info-val online">● Live</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Auth</span>
+          <span class="info-val">JWT</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Encrypt</span>
+          <span class="info-val">bcrypt</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+      <!-- Signup -->
+      <div id="signup" class="panel active">
+        <div class="panel-header">
+          <h2>Create New User</h2>
+          <span class="badge">POST /api/users/signup</span>
+        </div>
+        <form onsubmit="handleSignup(event)">
+          <div class="field">
+            <label>Full Name</label>
+            <input type="text" id="signupName" placeholder="e.g. Suhail Gour" required>
+          </div>
+          <div class="field">
+            <label>Email Address</label>
+            <input type="email" id="signupEmail" placeholder="e.g. suhail@example.com" required>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <input type="password" id="signupPassword" placeholder="Min 6 characters" required>
+          </div>
+          <button type="submit" class="btn-green">Create User →</button>
+        </form>
+      </div>
+
+      <!-- Login -->
+      <div id="login" class="panel">
+        <div class="panel-header">
+          <h2>Login</h2>
+          <span class="badge">POST /api/users/login</span>
+        </div>
+        <form onsubmit="handleLogin(event)">
+          <div class="field">
+            <label>Email Address</label>
+            <input type="email" id="loginEmail" placeholder="e.g. suhail@example.com" required>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+          </div>
+          <button type="submit" class="btn-green">Login →</button>
+        </form>
+      </div>
+
+      <!-- Assign Role -->
+      <div id="role" class="panel">
+        <div class="panel-header">
+          <h2>Assign Role</h2>
+          <span class="badge">PUT /api/users/assign-role</span>
+        </div>
+        <div class="auth-notice" id="roleNotice">
+          🔒 Login required to use this endpoint
+        </div>
+        <form onsubmit="handleAssignRole(event)">
+          <div class="field">
+            <label>User ID</label>
+            <input type="text" id="roleUserId" placeholder="e.g. USR-20260522-0001" required>
+          </div>
+          <div class="field">
+            <label>Role</label>
+            <div class="role-chips">
+              <label class="chip"><input type="radio" name="role" value="user"> User</label>
+              <label class="chip"><input type="radio" name="role" value="admin"> Admin</label>
+              <label class="chip"><input type="radio" name="role" value="manager"> Manager</label>
+              <label class="chip"><input type="radio" name="role" value="viewer"> Viewer</label>
+            </div>
+          </div>
+          <button type="submit" class="btn-green">Assign Role →</button>
+        </form>
+      </div>
+
+      <!-- Toggle Status -->
+      <div id="status" class="panel">
+        <div class="panel-header">
+          <h2>Activate / Deactivate User</h2>
+          <span class="badge">PUT /api/users/toggle-status</span>
+        </div>
+        <div class="auth-notice" id="statusNotice">
+          🔒 Login required to use this endpoint
+        </div>
+        <form onsubmit="handleToggleStatus(event)">
+          <div class="field">
+            <label>User ID</label>
+            <input type="text" id="statusUserId" placeholder="e.g. USR-20260522-0001" required>
+          </div>
+          <div class="field">
+            <label>Action</label>
+            <div class="toggle-switch">
+              <button type="button" class="toggle-btn active" onclick="setAction('activate', this)">✅ Activate</button>
+              <button type="button" class="toggle-btn" onclick="setAction('deactivate', this)">🚫 Deactivate</button>
+            </div>
+            <input type="hidden" id="statusAction" value="activate">
+          </div>
+          <button type="submit" class="btn-green">Submit →</button>
+        </form>
+      </div>
+
+      <!-- Response Section -->
+      <div id="response" class="response-panel" style="display:none;">
+        <div class="response-header">
+          <span class="response-title">📡 Response</span>
+          <span class="response-status" id="responseStatus"></span>
+        </div>
+        <pre id="responseContent"></pre>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
