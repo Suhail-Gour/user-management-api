@@ -1,0 +1,11 @@
+[
+  {
+    "userId": "USR-20260522-0001",
+    "name": "Suhail Gour",
+    "email": "suhail@test.com",
+    "password": "$2b$10$Y56kWAUNHxd5jdbaNtAWk.s9K8XhpIgB9qAcgDVzF8CWqSp2.txWO",
+    "role": "admin",
+    "isActive": false,
+    "createdAt": "2026-05-22T09:48:38.635Z"
+  }
+]
