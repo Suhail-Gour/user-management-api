@@ -1,51 +1,75 @@
 const API_URL = window.location.origin;
 let authToken = '';
 
+const toolbarData = {
+  signup:  { label: 'db.users.insertOne()', method: 'POST', path: '/api/users/signup' },
+  login:   { label: 'db.users.authenticate()', method: 'POST', path: '/api/users/login' },
+  role:    { label: 'db.users.updateOne({ role })', method: 'PUT', path: '/api/users/assign-role' },
+  status:  { label: 'db.users.updateOne({ status })', method: 'PUT', path: '/api/users/toggle-status' }
+};
+
 // Tab switching
 function showTab(tabName, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
 
   document.getElementById(tabName).classList.add('active');
   btn.classList.add('active');
-}
 
-// Toggle action buttons
-function setAction(action, btn) {
-  document.getElementById('statusAction').value = action;
-  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
+  // Update toolbar
+  const data = toolbarData[tabName];
+  document.getElementById('toolbarLabel').textContent = data.label;
+  document.getElementById('methodBadge').textContent = data.method;
+  document.getElementById('pathBadge').textContent = data.path;
 
-// Update login status in navbar
-function updateLoginStatus(isLoggedIn, email = '') {
-  const status = document.getElementById('loginStatus');
-  if (isLoggedIn) {
-    status.innerHTML = `<span class="status-dot online"></span><span class="status-text">Logged in as ${email}</span>`;
-    document.getElementById('roleNotice').classList.add('hidden');
-    document.getElementById('statusNotice').classList.add('hidden');
+  // Color the method badge
+  const badge = document.getElementById('methodBadge');
+  if (data.method === 'PUT') {
+    badge.style.background = '#0C2657';
+    badge.style.color = '#016BF8';
+  } else {
+    badge.style.background = '#023430';
+    badge.style.color = '#00ED64';
   }
 }
 
-// Show response
-function showResponse(data, isError = false, statusCode = '') {
+// Toggle action
+function setAction(action, btn) {
+  document.getElementById('statusAction').value = action;
+  document.querySelectorAll('.toggle-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Update connection status
+function updateConnection(isConnected, email = '') {
+  const dot = document.querySelector('.conn-dot');
+  const text = document.getElementById('connText');
+  if (isConnected) {
+    dot.classList.add('connected');
+    text.textContent = email;
+    document.getElementById('roleWarning').classList.add('hidden');
+    document.getElementById('statusWarning').classList.add('hidden');
+  }
+}
+
+// Show output
+function showOutput(data, isError = false, statusCode = '') {
   const panel = document.getElementById('response');
-  const content = document.getElementById('responseContent');
-  const statusBadge = document.getElementById('responseStatus');
+  const body = document.getElementById('outputBody');
+  const status = document.getElementById('outputStatus');
 
   panel.style.display = 'block';
-  panel.className = `response-panel ${isError ? 'error' : ''}`;
+  panel.className = `output-panel ${isError ? 'error' : ''}`;
 
-  statusBadge.textContent = isError ? `✗ ${statusCode || 'Error'}` : `✓ ${statusCode || 'Success'}`;
-  statusBadge.className = `response-status ${isError ? 'error' : 'success'}`;
+  status.textContent = isError ? `${statusCode} ERROR` : `${statusCode} OK`;
+  status.className = `output-status ${isError ? 'error' : 'success'}`;
 
-  content.textContent = JSON.stringify(data, null, 2);
+  body.textContent = JSON.stringify(data, null, 2);
 }
 
 // API 1: Signup
 async function handleSignup(e) {
   e.preventDefault();
-
   const body = {
     name: document.getElementById('signupName').value,
     email: document.getElementById('signupEmail').value,
@@ -59,16 +83,15 @@ async function handleSignup(e) {
       body: JSON.stringify(body)
     });
     const data = await res.json();
-    showResponse(data, !res.ok, res.status);
+    showOutput(data, !res.ok, res.status);
   } catch (err) {
-    showResponse({ message: 'Network error', error: err.message }, true);
+    showOutput({ message: 'Network error', error: err.message }, true);
   }
 }
 
 // API 2: Login
 async function handleLogin(e) {
   e.preventDefault();
-
   const email = document.getElementById('loginEmail').value;
   const body = {
     email,
@@ -85,12 +108,12 @@ async function handleLogin(e) {
 
     if (res.ok && data.token) {
       authToken = data.token;
-      updateLoginStatus(true, email);
+      updateConnection(true, email);
     }
 
-    showResponse(data, !res.ok, res.status);
+    showOutput(data, !res.ok, res.status);
   } catch (err) {
-    showResponse({ message: 'Network error', error: err.message }, true);
+    showOutput({ message: 'Network error', error: err.message }, true);
   }
 }
 
@@ -99,13 +122,13 @@ async function handleAssignRole(e) {
   e.preventDefault();
 
   if (!authToken) {
-    showResponse({ message: 'Please login first to get a token.' }, true, '401');
+    showOutput({ message: 'Authentication required. Please login first.' }, true, 401);
     return;
   }
 
   const selectedRole = document.querySelector('input[name="role"]:checked');
   if (!selectedRole) {
-    showResponse({ message: 'Please select a role.' }, true, '400');
+    showOutput({ message: 'Please select a role.' }, true, 400);
     return;
   }
 
@@ -124,18 +147,18 @@ async function handleAssignRole(e) {
       body: JSON.stringify(body)
     });
     const data = await res.json();
-    showResponse(data, !res.ok, res.status);
+    showOutput(data, !res.ok, res.status);
   } catch (err) {
-    showResponse({ message: 'Network error', error: err.message }, true);
+    showOutput({ message: 'Network error', error: err.message }, true);
   }
 }
 
-// API 4: Activate/Deactivate
+// API 4: Toggle Status
 async function handleToggleStatus(e) {
   e.preventDefault();
 
   if (!authToken) {
-    showResponse({ message: 'Please login first to get a token.' }, true, '401');
+    showOutput({ message: 'Authentication required. Please login first.' }, true, 401);
     return;
   }
 
@@ -154,8 +177,8 @@ async function handleToggleStatus(e) {
       body: JSON.stringify(body)
     });
     const data = await res.json();
-    showResponse(data, !res.ok, res.status);
+    showOutput(data, !res.ok, res.status);
   } catch (err) {
-    showResponse({ message: 'Network error', error: err.message }, true);
+    showOutput({ message: 'Network error', error: err.message }, true);
   }
 }

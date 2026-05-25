@@ -13,8 +13,8 @@
     "name": "Mudassir",
     "email": "Mudassir@example.com",
     "password": "$2b$10$K6pUMPB/26.Jt6ioL56JjuCY/jLC3RQ/Bc.ARFyWlHoWrXfWzISOy",
-    "role": "manager",
-    "isActive": true,
+    "role": "viewer",
+    "isActive": false,
     "createdAt": "2026-05-22T11:00:53.422Z"
   },
   {

@@ -3,167 +3,176 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Management API</title>
+  <title>User Management — Compass</title>
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="nav-brand">
-      <span class="nav-icon">⚡</span>
-      <span class="nav-title">UserAPI</span>
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <svg class="logo-icon" viewBox="0 0 15 32" width="15" height="32">
+        <path fill="#00ED64" d="M7.5 32c-.2-1.4-.9-2.6-2-3.6C3.7 26.8 1.5 24.5.6 21.5c-1.5-5 .3-9.4 3-13.4C5.5 5.2 7 2.2 7.3.3c0-.2.1-.3.2-.3s.2.1.2.3c.3 1.9 1.8 4.9 3.7 7.8 2.7 4 4.5 8.4 3 13.4-.9 3-3.1 5.3-4.9 6.9-1.1 1-1.8 2.2-2 3.6z"/>
+      </svg>
+      <span class="topbar-title">UserManagement</span>
+      <span class="topbar-separator">|</span>
+      <span class="topbar-subtitle">Compass</span>
     </div>
-    <div class="nav-status" id="loginStatus">
-      <span class="status-dot offline"></span>
-      <span class="status-text">Not logged in</span>
+    <div class="topbar-right">
+      <div class="connection-badge" id="connBadge">
+        <span class="conn-dot"></span>
+        <span class="conn-text" id="connText">Not Connected</span>
+      </div>
     </div>
-  </nav>
+  </header>
 
-  <div class="layout">
+  <div class="app-layout">
 
     <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-label">OPERATIONS</div>
-      <button class="sidebar-btn active" onclick="showTab('signup', this)">
-        <span class="sidebar-icon">👤</span> Sign Up
-      </button>
-      <button class="sidebar-btn" onclick="showTab('login', this)">
-        <span class="sidebar-icon">🔑</span> Login
-      </button>
-      <button class="sidebar-btn" onclick="showTab('role', this)">
-        <span class="sidebar-icon">🛡️</span> Assign Role
-      </button>
-      <button class="sidebar-btn" onclick="showTab('status', this)">
-        <span class="sidebar-icon">⚙️</span> Toggle Status
+    <nav class="sidebar">
+      <div class="sidebar-section-label">COLLECTIONS</div>
+
+      <button class="sidebar-item active" onclick="showTab('signup', this)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a4 4 0 014 4 4 4 0 01-4 4A4 4 0 014 4 4 4 0 018 0zm0 10c4.4 0 8 1.8 8 4v2H0v-2c0-2.2 3.6-4 8-4z"/></svg>
+        <span>users.signup</span>
       </button>
 
-      <div class="sidebar-label" style="margin-top: 24px;">QUICK INFO</div>
-      <div class="sidebar-info">
-        <div class="info-row">
-          <span class="info-key">API</span>
-          <span class="info-val online">● Live</span>
-        </div>
-        <div class="info-row">
-          <span class="info-key">Auth</span>
-          <span class="info-val">JWT</span>
-        </div>
-        <div class="info-row">
-          <span class="info-key">Encrypt</span>
-          <span class="info-val">bcrypt</span>
-        </div>
+      <button class="sidebar-item" onclick="showTab('login', this)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a3 3 0 00-3 3v2H4a2 2 0 00-2 2v5a2 2 0 002 2h8a2 2 0 002-2V8a2 2 0 00-2-2h-1V4a3 3 0 00-3-3zm0 1.5A1.5 1.5 0 019.5 4v2h-3V4A1.5 1.5 0 018 2.5z"/></svg>
+        <span>users.login</span>
+      </button>
+
+      <button class="sidebar-item" onclick="showTab('role', this)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2 4h4l-3 3 1 5-4-2-4 2 1-5-3-3h4z"/></svg>
+        <span>users.assignRole</span>
+      </button>
+
+      <button class="sidebar-item" onclick="showTab('status', this)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 110 16A8 8 0 018 0zm0 2a6 6 0 100 12A6 6 0 008 2zm3 5v2H5V7z"/></svg>
+        <span>users.toggleStatus</span>
+      </button>
+
+      <div class="sidebar-section-label" style="margin-top: 24px">INFO</div>
+      <div class="sidebar-meta">
+        <div class="meta-row"><span class="meta-key">db</span><span class="meta-val">userManagementDB</span></div>
+        <div class="meta-row"><span class="meta-key">auth</span><span class="meta-val">JWT / bcrypt</span></div>
+        <div class="meta-row"><span class="meta-key">node</span><span class="meta-val">v22+</span></div>
+        <div class="meta-row"><span class="meta-key">docs</span><span class="meta-val">4 endpoints</span></div>
       </div>
-    </aside>
+    </nav>
 
     <!-- Main Content -->
-    <main class="main">
+    <main class="main-content">
 
-      <!-- Signup -->
-      <div id="signup" class="panel active">
-        <div class="panel-header">
-          <h2>Create New User</h2>
-          <span class="badge">POST /api/users/signup</span>
-        </div>
-        <form onsubmit="handleSignup(event)">
-          <div class="field">
-            <label>Full Name</label>
-            <input type="text" id="signupName" placeholder="e.g. Suhail Gour" required>
-          </div>
-          <div class="field">
-            <label>Email Address</label>
-            <input type="email" id="signupEmail" placeholder="e.g. suhail@example.com" required>
-          </div>
-          <div class="field">
-            <label>Password</label>
-            <input type="password" id="signupPassword" placeholder="Min 6 characters" required>
-          </div>
-          <button type="submit" class="btn-green">Create User →</button>
-        </form>
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <span class="toolbar-label" id="toolbarLabel">db.users.signup()</span>
+    <div class="toolbar-actions">
+      <span class="toolbar-badge" id="methodBadge">POST</span>
+      <span class="toolbar-path" id="pathBadge">/api/users/signup</span>
+    </div>
+  </div>
+
+  <!-- Signup Panel -->
+  <div id="signup" class="panel active">
+    <div class="panel-title">Sign Up — New User</div>
+    <form onsubmit="handleSignup(event)">
+      <div class="field-group">
+        <label class="field-label">name<span class="field-type">string</span></label>
+        <input type="text" id="signupName" placeholder="Enter full name" required>
       </div>
-
-      <!-- Login -->
-      <div id="login" class="panel">
-        <div class="panel-header">
-          <h2>Login</h2>
-          <span class="badge">POST /api/users/login</span>
-        </div>
-        <form onsubmit="handleLogin(event)">
-          <div class="field">
-            <label>Email Address</label>
-            <input type="email" id="loginEmail" placeholder="e.g. suhail@example.com" required>
-          </div>
-          <div class="field">
-            <label>Password</label>
-            <input type="password" id="loginPassword" placeholder="Enter your password" required>
-          </div>
-          <button type="submit" class="btn-green">Login →</button>
-        </form>
+      <div class="field-group">
+        <label class="field-label">email<span class="field-type">string</span></label>
+        <input type="email" id="signupEmail" placeholder="Enter email address" required>
       </div>
-
-      <!-- Assign Role -->
-      <div id="role" class="panel">
-        <div class="panel-header">
-          <h2>Assign Role</h2>
-          <span class="badge">PUT /api/users/assign-role</span>
-        </div>
-        <div class="auth-notice" id="roleNotice">
-          🔒 Login required to use this endpoint
-        </div>
-        <form onsubmit="handleAssignRole(event)">
-          <div class="field">
-            <label>User ID</label>
-            <input type="text" id="roleUserId" placeholder="e.g. USR-20260522-0001" required>
-          </div>
-          <div class="field">
-            <label>Role</label>
-            <div class="role-chips">
-              <label class="chip"><input type="radio" name="role" value="user"> User</label>
-              <label class="chip"><input type="radio" name="role" value="admin"> Admin</label>
-              <label class="chip"><input type="radio" name="role" value="manager"> Manager</label>
-              <label class="chip"><input type="radio" name="role" value="viewer"> Viewer</label>
-            </div>
-          </div>
-          <button type="submit" class="btn-green">Assign Role →</button>
-        </form>
+      <div class="field-group">
+        <label class="field-label">password<span class="field-type">string • hashed</span></label>
+        <input type="password" id="signupPassword" placeholder="Enter password" required>
       </div>
+      <button type="submit" class="btn-insert">Sign Up</button>
+    </form>
+  </div>
 
-      <!-- Toggle Status -->
-      <div id="status" class="panel">
-        <div class="panel-header">
-          <h2>Activate / Deactivate User</h2>
-          <span class="badge">PUT /api/users/toggle-status</span>
-        </div>
-        <div class="auth-notice" id="statusNotice">
-          🔒 Login required to use this endpoint
-        </div>
-        <form onsubmit="handleToggleStatus(event)">
-          <div class="field">
-            <label>User ID</label>
-            <input type="text" id="statusUserId" placeholder="e.g. USR-20260522-0001" required>
-          </div>
-          <div class="field">
-            <label>Action</label>
-            <div class="toggle-switch">
-              <button type="button" class="toggle-btn active" onclick="setAction('activate', this)">✅ Activate</button>
-              <button type="button" class="toggle-btn" onclick="setAction('deactivate', this)">🚫 Deactivate</button>
-            </div>
-            <input type="hidden" id="statusAction" value="activate">
-          </div>
-          <button type="submit" class="btn-green">Submit →</button>
-        </form>
+  <!-- Login Panel -->
+  <div id="login" class="panel">
+    <div class="panel-title">Login — User Authentication</div>
+    <form onsubmit="handleLogin(event)">
+      <div class="field-group">
+        <label class="field-label">email<span class="field-type">string</span></label>
+        <input type="email" id="loginEmail" placeholder="Enter email address" required>
       </div>
-
-      <!-- Response Section -->
-      <div id="response" class="response-panel" style="display:none;">
-        <div class="response-header">
-          <span class="response-title">📡 Response</span>
-          <span class="response-status" id="responseStatus"></span>
-        </div>
-        <pre id="responseContent"></pre>
+      <div class="field-group">
+        <label class="field-label">password<span class="field-type">string</span></label>
+        <input type="password" id="loginPassword" placeholder="Enter password" required>
       </div>
+      <button type="submit" class="btn-insert">Login</button>
+    </form>
+  </div>
 
-    </main>
+  <!-- Assign Role Panel -->
+  <div id="role" class="panel">
+    <div class="panel-title">Assign Role</div>
+    <div class="auth-warning" id="roleWarning">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="#FFC010"><path d="M8 0l8 14H0L8 0zm0 5a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1zm0 7a1 1 0 100-2 1 1 0 000 2z"/></svg>
+      Authentication required — Please login first
+    </div>
+    <form onsubmit="handleAssignRole(event)">
+      <div class="field-group">
+        <label class="field-label">userId<span class="field-type">string</span></label>
+        <input type="text" id="roleUserId" placeholder="e.g. USR-20260522-0001" required>
+      </div>
+      <div class="field-group">
+        <label class="field-label">role<span class="field-type">enum</span></label>
+        <div class="chip-group">
+          <label class="role-chip"><input type="radio" name="role" value="user"><span>user</span></label>
+          <label class="role-chip"><input type="radio" name="role" value="admin"><span>admin</span></label>
+          <label class="role-chip"><input type="radio" name="role" value="manager"><span>manager</span></label>
+          <label class="role-chip"><input type="radio" name="role" value="viewer"><span>viewer</span></label>
+        </div>
+      </div>
+      <button type="submit" class="btn-insert">Assign Role</button>
+    </form>
+  </div>
+
+  <!-- Activate / Deactivate Panel -->
+  <div id="status" class="panel">
+    <div class="panel-title">Activate / Deactivate User</div>
+    <div class="auth-warning" id="statusWarning">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="#FFC010"><path d="M8 0l8 14H0L8 0zm0 5a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1zm0 7a1 1 0 100-2 1 1 0 000 2z"/></svg>
+      Authentication required — Please login first
+    </div>
+    <form onsubmit="handleToggleStatus(event)">
+      <div class="field-group">
+        <label class="field-label">userId<span class="field-type">string</span></label>
+        <input type="text" id="statusUserId" placeholder="e.g. USR-20260522-0001" required>
+      </div>
+      <div class="field-group">
+        <label class="field-label">action<span class="field-type">enum</span></label>
+        <div class="action-toggle">
+          <button type="button" class="toggle-opt active" onclick="setAction('activate', this)">
+            <span class="toggle-dot green"></span> activate
+          </button>
+          <button type="button" class="toggle-opt" onclick="setAction('deactivate', this)">
+            <span class="toggle-dot red"></span> deactivate
+          </button>
+        </div>
+        <input type="hidden" id="statusAction" value="activate">
+      </div>
+      <button type="submit" class="btn-insert">Submit</button>
+    </form>
+  </div>
+
+  <!-- Response Output -->
+  <div id="response" class="output-panel" style="display:none;">
+    <div class="output-header">
+      <span class="output-title">Output</span>
+      <span class="output-status" id="outputStatus"></span>
+    </div>
+    <pre class="output-body" id="outputBody"></pre>
+  </div>
+
+</main>
   </div>
 
   <script src="script.js"></script>
