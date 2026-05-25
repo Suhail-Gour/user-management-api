@@ -561,3 +561,11 @@ body {
     flex-direction: column;
   }
 }
+
+/* Field Hint */
+.field-hint {
+  font-size: 11px;
+  color: var(--gray-base);
+  margin-top: 6px;
+  font-family: var(--font-mono);
+}

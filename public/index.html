@@ -78,14 +78,15 @@
         <label class="field-label">name<span class="field-type">string</span></label>
         <input type="text" id="signupName" placeholder="Enter full name" required>
       </div>
-      <div class="field-group">
+      <div class="field-group"> 
         <label class="field-label">email<span class="field-type">string</span></label>
         <input type="email" id="signupEmail" placeholder="Enter email address" required>
       </div>
-      <div class="field-group">
+      <div class="field-group">ß
         <label class="field-label">password<span class="field-type">string • hashed</span></label>
-        <input type="password" id="signupPassword" placeholder="Enter password" required>
-      </div>
+        <input type="password" id="signupPassword" placeholder="Min 8 chars, A-Z, a-z, 0-9, special" required minlength="8" maxlength="64">
+        <div class="field-hint">Must contain: uppercase, lowercase, number, special character</div>
+    </div>
       <button type="submit" class="btn-insert">Sign Up</button>
     </form>
   </div>

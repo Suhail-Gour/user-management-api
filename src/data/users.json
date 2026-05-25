@@ -1,29 +1,11 @@
 [
   {
-    "userId": "USR-20260522-0001",
-    "name": "Suhail Gour",
-    "email": "suhail@test.com",
-    "password": "$2b$10$Y56kWAUNHxd5jdbaNtAWk.s9K8XhpIgB9qAcgDVzF8CWqSp2.txWO",
+    "userId": "USR-20260525-0005",
+    "name": "Mohd Suhail",
+    "email": "suhail_gour@gmail.com",
+    "password": "$2b$10$0IBbIp/Rg1DrfbnuHCI7UeUF3mWtKO66N07LZe.Seq0MF1Jv0SEmu",
     "role": "admin",
-    "isActive": false,
-    "createdAt": "2026-05-22T09:48:38.635Z"
-  },
-  {
-    "userId": "USR-20260522-0002",
-    "name": "Mudassir",
-    "email": "Mudassir@example.com",
-    "password": "$2b$10$K6pUMPB/26.Jt6ioL56JjuCY/jLC3RQ/Bc.ARFyWlHoWrXfWzISOy",
-    "role": "viewer",
-    "isActive": false,
-    "createdAt": "2026-05-22T11:00:53.422Z"
-  },
-  {
-    "userId": "USR-20260522-0003",
-    "name": "Ajitej Kaushik",
-    "email": "ajitej@test.com",
-    "password": "$2b$10$RF45lLuDB6laGIY62Bkbg.jlNSHs1jwb8n6nePebAmOl42qlCl4fO",
-    "role": "user",
     "isActive": true,
-    "createdAt": "2026-05-22T11:08:21.047Z"
+    "createdAt": "2026-05-25T11:58:02.970Z"
   }
 ]
